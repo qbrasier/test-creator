@@ -4,6 +4,15 @@ public abstract class Question {
     private int id;
     private String text;
 
+    Question(){
+
+        text = "";
+    }
+    Question(String questionText){
+
+        text = questionText;
+    }
+
     public int getId() {
         return id;
     }
