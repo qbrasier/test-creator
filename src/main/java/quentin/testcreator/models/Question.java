@@ -1,7 +1,14 @@
 package quentin.testcreator.models;
 
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+
+@Entity
 public abstract class Question {
+    @Id
+    @GeneratedValue
     private int id;
+    @NotNull
     private String text;
 
     Question(){
