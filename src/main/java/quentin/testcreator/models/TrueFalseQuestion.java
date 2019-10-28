@@ -1,18 +1,23 @@
 package quentin.testcreator.models;
 
-public class TrueFalseQuestion extends Question{
-    private boolean answer;
+import javax.persistence.Entity;
+import javax.validation.constraints.NotNull;
 
-    TrueFalseQuestion(String questionText, boolean answer){
+@Entity
+public class TrueFalseQuestion extends Question{
+    @NotNull
+    private boolean correctAnswer;
+
+    TrueFalseQuestion(String questionText, boolean correctAnswer){
         super(questionText);
-        this.answer = answer;
+        this.correctAnswer = correctAnswer;
     }
 
     public boolean isAnswer() {
-        return answer;
+        return correctAnswer;
     }
 
     public void setAnswer(boolean answer) {
-        this.answer = answer;
+        this.correctAnswer = answer;
     }
 }

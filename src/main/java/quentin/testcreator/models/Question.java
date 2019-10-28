@@ -8,6 +8,7 @@ public abstract class Question {
     @Id
     @GeneratedValue
     private int id;
+
     @NotNull
     private String text;
 
