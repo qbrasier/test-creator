@@ -11,8 +11,10 @@ public class MultipleChoiceQuestion extends Question {
     private String[] choices;
 
     MultipleChoiceQuestion(String questionText, int correctAnswer, String[] choices){
+        super(questionText);
         this.correctAnswer = correctAnswer;
         this.choices = choices;
+
     }
     
     public void setAnswer(int i){
