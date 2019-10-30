@@ -30,7 +30,7 @@ public class QuestionController {
 
     @RequestMapping(value = "addTF", method = RequestMethod.GET)
     public String add(Model model){
-        model.addAttribute(new TrueFalseQuestion());
+        model.addAttribute("question", new TrueFalseQuestion());
         model.addAttribute("title", "Create New Question");
         return "question/addTrueFalse";
     }

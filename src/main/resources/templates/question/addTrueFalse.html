@@ -4,8 +4,16 @@
 <body class="container">
 <h1 th:text="${title}">Default Title</h1>
 
-
 <nav th:replace="fragments :: navigation"></nav>
+
+<form method="post" th:object="${question}">
+    Question<br>
+    <input type="text"  th:field="*{questionText}"/><br>
+    Correct Answer:<br>
+    <input type="radio" th:field="*{correctAnswer}" th:value="${true}" />
+    <input type="radio" th:field="*{correctAnswer}" th:value="${false}" />
+    <input type="submit" value="Submit"/>
+</form>
 
 </body>
 </html>

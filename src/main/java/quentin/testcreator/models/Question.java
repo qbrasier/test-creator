@@ -30,11 +30,11 @@ public abstract class Question {
         this.id = id;
     }
 
-    public String getText() {
+    public String getQuestionText() {
         return questionText;
     }
 
-    public void setText(String text) {
+    public void setQuestionText(String text) {
         this.questionText = text;
     }
 }
