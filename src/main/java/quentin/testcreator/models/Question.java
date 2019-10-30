@@ -11,15 +11,15 @@ public abstract class Question {
     private int id;
 
     @NotNull
-    private String text;
+    private String questionText;
 
     Question(){
 
-        text = "";
+        questionText = "";
     }
     Question(String questionText){
 
-        text = questionText;
+        this.questionText = questionText;
     }
 
     public int getId() {
@@ -31,10 +31,10 @@ public abstract class Question {
     }
 
     public String getText() {
-        return text;
+        return questionText;
     }
 
     public void setText(String text) {
-        this.text = text;
+        this.questionText = text;
     }
 }

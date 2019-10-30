@@ -8,9 +8,13 @@ public class TrueFalseQuestion extends Question{
     @NotNull
     private boolean correctAnswer;
 
-    TrueFalseQuestion(String questionText, boolean correctAnswer){
+    public TrueFalseQuestion(String questionText, boolean correctAnswer){
         super(questionText);
         this.correctAnswer = correctAnswer;
+    }
+
+    public TrueFalseQuestion(){
+        super();
     }
 
     public boolean isAnswer() {
