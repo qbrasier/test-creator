@@ -8,6 +8,7 @@ public class MultipleChoiceQuestion extends Question {
 
     @NotNull
     private int correctAnswer;
+    //@NotNull
     private String[] choices;
 
     public MultipleChoiceQuestion(String questionText, int correctAnswer, String[] choices){
@@ -16,12 +17,15 @@ public class MultipleChoiceQuestion extends Question {
         this.choices = choices;
 
     }
+    public MultipleChoiceQuestion(){
+        super();
+    }
     
-    public void setAnswer(int i){
+    public void setCorrectAnswer(int i){
         correctAnswer = i;
     }
 
-    public int getAnswer(){
+    public int getCorrectAnswer(){
         return correctAnswer;
     }
 

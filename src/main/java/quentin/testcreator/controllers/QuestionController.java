@@ -7,6 +7,7 @@ import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import quentin.testcreator.models.MultipleChoiceQuestion;
 import quentin.testcreator.models.Question;
 import quentin.testcreator.models.TrueFalseQuestion;
 import quentin.testcreator.models.data.QuestionDao;
@@ -29,16 +30,34 @@ public class QuestionController {
     }
 
     @RequestMapping(value = "addTF", method = RequestMethod.GET)
-    public String add(Model model){
+    public String addTF(Model model){
         model.addAttribute("question", new TrueFalseQuestion());
         model.addAttribute("title", "Create New Question");
         return "question/addTrueFalse";
     }
 
     @RequestMapping(value = "addTF", method = RequestMethod.POST)
-    public String add(Model model, @ModelAttribute @Valid TrueFalseQuestion question, Errors errors){
+    public String addTF(Model model, @ModelAttribute @Valid TrueFalseQuestion question, Errors errors){
         if(errors.hasErrors()){
             return "question/addTrueFalse";
+        }
+        questionDao.save(question);
+        return "redirect:";
+    }
+    @RequestMapping(value = "addMulti", method = RequestMethod.GET)
+    public String addMulti(Model model){
+        model.addAttribute("question", new MultipleChoiceQuestion());
+        model.addAttribute("title", "Create New Question");
+        return "question/addMultipleChoice";
+    }
+
+    @RequestMapping(value = "addMulti", method = RequestMethod.POST)
+    public String addMulti(Model model, @ModelAttribute @Valid MultipleChoiceQuestion question, Errors errors){
+        if(errors.hasErrors()){
+            model.addAttribute("question", new MultipleChoiceQuestion());
+            model.addAttribute("title", "Create New Question");
+            model.addAttribute("error", errors);
+            return "question/addMultipleChoice";
         }
         questionDao.save(question);
         return "redirect:";

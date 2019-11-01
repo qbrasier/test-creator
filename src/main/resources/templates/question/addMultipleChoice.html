@@ -11,9 +11,22 @@
     <input type="text"  th:field="*{questionText}"/><br>
     <span th:errors="*{questionText}"></span>
     Correct Answer:<br>
-    <input type="radio" th:field="*{correctAnswer}" th:value="${true}" />
-    <input type="radio" th:field="*{correctAnswer}" th:value="${false}" />
+    <input type="text" th:field="*{correctAnswer}" /><br>
     <span th:errors="*{correctAnswer}"></span>
+
+    Answer 1:<br>
+    <input type="text" th:field="*{choices[0]}"/><br>
+    <span th:errors="*{choices[0]}"></span>
+    Answer 2:<br>
+    <input type="text" th:field="*{choices[1]}"/><br>
+    <span th:errors="*{choices[1]}"></span>
+    Answer 3:<br>
+    <input type="text" th:field="*{choices[2]}"/><br>
+    <span th:errors="*{choices[2]}"></span>
+    Answer 4:<br>
+    <input type="text" th:field="*{choices[3]}"/><br>
+    <span th:errors="*{choices[3]}"></span>
+
     <input type="submit" value="Submit"/>
 </form>
 

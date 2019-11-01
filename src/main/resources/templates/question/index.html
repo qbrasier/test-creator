@@ -1,17 +1,43 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org/">
-<head th:replace="fragments :: head"></head>
+<head th:replace="fragments :: head">
+
+</head>
 <body class="container">
 <h1 th:text="${title}">Default Title</h1>
 
 <nav th:replace="fragments :: navigation"></nav>
 
+<table id="questionsDisplay">
+    <tr>
+        <th>Id</th>
+        <th>Type</th>
+        <th>Question</th>
+        <th>Answers</th>
+        <th>Correct Answer</th>
+    </tr>
 
-<ul>
-    <li th:each="question:${questions}" th:text="${question.id}"></li>
-</ul>
+    <tr th:each="question : ${questions}">
+        <td th:text="${question.id}"></td>
+        <td th:text="${question.class.name}"></td>
+        <td th:text="${question.questionText}"></td>
+        <td th:if="${question.class.name == 'quentin.testcreator.models.MultipleChoiceQuestion'}" >
+            <table >
+                <tr th:each="choice : ${question.choices}">
+                    <td th:text="${choice}"></td>
+                </tr>
+            </table>
+        </td>
+
+        <td th:if="${question.class.name == 'quentin.testcreator.models.MultipleChoiceQuestion'}" th:text="${question.correctAnswer}">  </td>
+        <td th:if="${question.class.name == 'quentin.testcreator.models.TrueFalseQuestion'}" > </td>
+        <td th:if="${question.class.name == 'quentin.testcreator.models.TrueFalseQuestion'}" th:text="${question.correctAnswer} ? 'True' : 'False'"> </td>
+
+    </tr>
+
+</table>
 
 <a href="/q-edit/addTF">Create New True/False Question</a>
-<a href="/q-edit/addMult">Create New Multiple Choice Question</a>
+<a href="/q-edit/addMulti">Create New Multiple Choice Question</a>
 </body>
 </html>
