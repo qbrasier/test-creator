@@ -7,6 +7,7 @@ import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import quentin.testcreator.models.FillInTheBlankQuestion;
 import quentin.testcreator.models.MultipleChoiceQuestion;
 import quentin.testcreator.models.Question;
 import quentin.testcreator.models.TrueFalseQuestion;
@@ -58,6 +59,24 @@ public class QuestionController {
             model.addAttribute("title", "Create New Question");
             model.addAttribute("error", errors);
             return "question/addMultipleChoice";
+        }
+        questionDao.save(question);
+        return "redirect:";
+    }
+    @RequestMapping(value = "addFITB", method = RequestMethod.GET)
+    public String addFITB(Model model){
+        model.addAttribute("question", new FillInTheBlankQuestion());
+        model.addAttribute("title", "Create New Question");
+        return "question/addFillInTheBlank";
+    }
+
+    @RequestMapping(value = "addFITB", method = RequestMethod.POST)
+    public String addFITB(Model model, @ModelAttribute @Valid FillInTheBlankQuestion question, Errors errors){
+        if(errors.hasErrors()){
+            model.addAttribute("question", new FillInTheBlankQuestion());
+            model.addAttribute("title", "Create New Question");
+            model.addAttribute("error", errors);
+            return "question/addFillInTheBlank";
         }
         questionDao.save(question);
         return "redirect:";

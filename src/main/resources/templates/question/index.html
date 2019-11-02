@@ -32,12 +32,17 @@
         <td th:if="${question.class.name == 'quentin.testcreator.models.MultipleChoiceQuestion'}" th:text="${question.correctAnswer}">  </td>
         <td th:if="${question.class.name == 'quentin.testcreator.models.TrueFalseQuestion'}" > </td>
         <td th:if="${question.class.name == 'quentin.testcreator.models.TrueFalseQuestion'}" th:text="${question.correctAnswer} ? 'True' : 'False'"> </td>
+        <td th:if="${question.class.name == 'quentin.testcreator.models.FillInTheBlankQuestion'}" > </td>
+        <td th:if="${question.class.name == 'quentin.testcreator.models.FillInTheBlankQuestion'}" th:text="${question.correctAnswer}"> </td>
 
     </tr>
 
 </table>
 
-<a href="/q-edit/addTF">Create New True/False Question</a>
+<a href="/q-edit/addTF">Create New True/False Question</a> |
 <a href="/q-edit/addMulti">Create New Multiple Choice Question</a>
+<br>
+<a href="/q-edit/addFITB">Create New Fill In The Blank Question</a> |
+<a href="/q-edit/addEssay">Create Essay Question</a>
 </body>
 </html>
