@@ -7,10 +7,7 @@ import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import quentin.testcreator.models.FillInTheBlankQuestion;
-import quentin.testcreator.models.MultipleChoiceQuestion;
-import quentin.testcreator.models.Question;
-import quentin.testcreator.models.TrueFalseQuestion;
+import quentin.testcreator.models.*;
 import quentin.testcreator.models.data.QuestionDao;
 
 import javax.validation.Valid;
@@ -81,4 +78,23 @@ public class QuestionController {
         questionDao.save(question);
         return "redirect:";
     }
+    @RequestMapping(value = "addEssay", method = RequestMethod.GET)
+    public String addEssay(Model model){
+        model.addAttribute("question", new EssayQuestion());
+        model.addAttribute("title", "Create New Question");
+        return "question/addEssay";
+    }
+
+    @RequestMapping(value = "addEssay", method = RequestMethod.POST)
+    public String addEssay(Model model, @ModelAttribute @Valid EssayQuestion question, Errors errors){
+        if(errors.hasErrors()){
+            model.addAttribute("question", new EssayQuestion());
+            model.addAttribute("title", "Create New Question");
+            model.addAttribute("error", errors);
+            return "question/addEssay";
+        }
+        questionDao.save(question);
+        return "redirect:";
+    }
+
 }
