@@ -4,13 +4,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 import quentin.testcreator.models.*;
 import quentin.testcreator.models.data.QuestionDao;
 
 import javax.validation.Valid;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("q-edit")
@@ -23,7 +22,7 @@ public class QuestionController {
     public String index(Model model){
         model.addAttribute("questions", questionDao.findAll());
         model.addAttribute("title", "Questions");
-
+        System.out.println("showing main question page");
         return "question/index";
     }
 
@@ -37,6 +36,8 @@ public class QuestionController {
     @RequestMapping(value = "addTF", method = RequestMethod.POST)
     public String addTF(Model model, @ModelAttribute @Valid TrueFalseQuestion question, Errors errors){
         if(errors.hasErrors()){
+            model.addAttribute("question", question);
+            model.addAttribute("title", "Create New Question");
             return "question/addTrueFalse";
         }
         questionDao.save(question);
@@ -52,7 +53,7 @@ public class QuestionController {
     @RequestMapping(value = "addMulti", method = RequestMethod.POST)
     public String addMulti(Model model, @ModelAttribute @Valid MultipleChoiceQuestion question, Errors errors){
         if(errors.hasErrors()){
-            model.addAttribute("question", new MultipleChoiceQuestion());
+            model.addAttribute("question", question);
             model.addAttribute("title", "Create New Question");
             model.addAttribute("error", errors);
             return "question/addMultipleChoice";
@@ -70,7 +71,7 @@ public class QuestionController {
     @RequestMapping(value = "addFITB", method = RequestMethod.POST)
     public String addFITB(Model model, @ModelAttribute @Valid FillInTheBlankQuestion question, Errors errors){
         if(errors.hasErrors()){
-            model.addAttribute("question", new FillInTheBlankQuestion());
+            model.addAttribute("question", question);
             model.addAttribute("title", "Create New Question");
             model.addAttribute("error", errors);
             return "question/addFillInTheBlank";
@@ -88,13 +89,98 @@ public class QuestionController {
     @RequestMapping(value = "addEssay", method = RequestMethod.POST)
     public String addEssay(Model model, @ModelAttribute @Valid EssayQuestion question, Errors errors){
         if(errors.hasErrors()){
-            model.addAttribute("question", new EssayQuestion());
+            model.addAttribute("question", question);
             model.addAttribute("title", "Create New Question");
             model.addAttribute("error", errors);
             return "question/addEssay";
         }
         questionDao.save(question);
         return "redirect:";
+    }
+
+    /*
+    @RequestMapping(value = "remove", method = RequestMethod.GET)
+    public String displayRemoveCheeseForm(Model model) {
+        model.addAttribute("questions", questionDao.findAll());
+        model.addAttribute("title", "Remove Question");
+        return "question/remove";
+    }*/
+
+    @RequestMapping(value = "delete/{Id}", method = RequestMethod.GET)
+    //@DeleteMapping(value = "delete/{Id}")
+    public String removeQuestion(Model model, @PathVariable int Id) {
+
+        System.out.println("trying to delete " + Id );
+        questionDao.deleteById(Id);
+
+        return "redirect:/q-edit/";
+    }
+
+    @RequestMapping(value = "edit/{Id}", method = RequestMethod.GET)
+    //@DeleteMapping(value = "delete/{Id}")
+    public String editQuestion(Model model, @PathVariable int Id) {
+
+        System.out.println("trying to edit " + Id );
+        Optional<Question> optionalQuestion = questionDao.findById(Id);
+        if(!optionalQuestion.isPresent()){
+            return "redirect:/q-edit/";
+        }
+        Question question = optionalQuestion.get();
+        model.addAttribute("question", question);
+        model.addAttribute("title", "Edit Question");
+        String template = question.getClass().getSimpleName();
+        template = template.replace("Question", "");
+        return "question/add" + template;
+    }
+    //TODO: this doesn't like taking the abstract Question as an argument, not sure why
+    //FIXED needed "ad hoc polymorphism"?
+    //NOT FIXED strange that its calling only the first available method when its not passing a TrueFalse question
+    // (and stranger that it works)
+    @RequestMapping(value = "edit/{Id}", method = RequestMethod.POST)
+    public String editQuestion(Model model, @ModelAttribute @Valid TrueFalseQuestion question, Errors errors) {
+        System.out.println("editing TrueFalse");
+        if(errors.hasErrors()){
+            System.out.println("error in TrueFalse");
+            model.addAttribute("question", question);
+            model.addAttribute("title", "Edit Question");
+            model.addAttribute("error", errors);
+            return "question/addTrueFalse";
+        }
+        questionDao.save(question);
+        return "redirect:/q-edit/";
+    }
+    public String editQuestion(Model model, @ModelAttribute @Valid MultipleChoiceQuestion question, Errors errors) {
+        if(errors.hasErrors()){
+            System.out.println("error in multipleChoice");
+            model.addAttribute("question", question);
+            model.addAttribute("title", "Edit Question");
+            model.addAttribute("error", errors);
+            return "question/addMultipleChoice";
+        }
+        questionDao.save(question);
+        return "redirect:/q-edit/";
+    }
+    public String editQuestion(Model model, @ModelAttribute @Valid EssayQuestion question, Errors errors) {
+        if(errors.hasErrors()){
+            System.out.println("error in Essay");
+            model.addAttribute("question", question);
+            model.addAttribute("title", "Edit Question");
+            model.addAttribute("error", errors);
+            return "question/addEssay";
+        }
+        questionDao.save(question);
+        return "redirect:/q-edit/";
+    }
+    public String editQuestion(Model model, @ModelAttribute @Valid FillInTheBlankQuestion question, Errors errors) {
+        if(errors.hasErrors()){
+            System.out.println("error in FillInTheBlank");
+            model.addAttribute("question", question);
+            model.addAttribute("title", "Edit Question");
+            model.addAttribute("error", errors);
+            return "question/addFillInTheBlank";
+        }
+        questionDao.save(question);
+        return "redirect:/q-edit/";
     }
 
 }

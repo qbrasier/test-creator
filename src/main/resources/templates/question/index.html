@@ -8,20 +8,24 @@
 
 <nav th:replace="fragments :: navigation"></nav>
 
-<table id="questionsDisplay">
+<table id="questionsDisplay" style="width:100%;" >
     <tr>
-        <th>Id</th>
-        <th>Type</th>
-        <th>Question</th>
-        <th>Answers</th>
-        <th>Correct Answer</th>
-        <th>Response Length</th>
+        <th style="text-align: left;">Id</th>
+        <th style="text-align: left;">Type</th>
+        <th style="text-align: left;">Question</th>
+        <th style="text-align: left;">Answers</th>
+        <th style="text-align: left;">Correct Answer</th>
+        <th style="text-align: left;">Response Length</th>
+        <th style="text-align: left;"></th>
+        <th style="text-align: left;"></th>
     </tr>
 
     <tr th:each="question : ${questions}">
         <td th:text="${question.id}"></td>
         <td th:text="${question.class.name}"></td>
         <td th:text="${question.questionText}"></td>
+
+
         <td th:if="${question.class.name == 'quentin.testcreator.models.MultipleChoiceQuestion'}" >
             <table >
                 <tr th:each="choice : ${question.choices}">
@@ -29,15 +33,27 @@
                 </tr>
             </table>
         </td>
-
         <td th:if="${question.class.name == 'quentin.testcreator.models.MultipleChoiceQuestion'}" th:text="${question.correctAnswer}">  </td>
+        <td th:if="${question.class.name == 'quentin.testcreator.models.MultipleChoiceQuestion'}">  </td>
+
         <td th:if="${question.class.name == 'quentin.testcreator.models.TrueFalseQuestion'}" > </td>
         <td th:if="${question.class.name == 'quentin.testcreator.models.TrueFalseQuestion'}" th:text="${question.correctAnswer} ? 'True' : 'False'"> </td>
+        <td th:if="${question.class.name == 'quentin.testcreator.models.TrueFalseQuestion'}" > </td>
+
         <td th:if="${question.class.name == 'quentin.testcreator.models.FillInTheBlankQuestion'}" > </td>
         <td th:if="${question.class.name == 'quentin.testcreator.models.FillInTheBlankQuestion'}" th:text="${question.correctAnswer}"> </td>
+        <td th:if="${question.class.name == 'quentin.testcreator.models.FillInTheBlankQuestion'}" > </td>
+
         <td th:if="${question.class.name == 'quentin.testcreator.models.EssayQuestion'}" > </td>
         <td th:if="${question.class.name == 'quentin.testcreator.models.EssayQuestion'}" > </td>
         <td th:if="${question.class.name == 'quentin.testcreator.models.EssayQuestion'}" th:text="${question.numLines}"> </td>
+
+        <td>
+            <a th:href="'/q-edit/edit/' + ${question.id}">Edit</a>
+        </td>
+        <td>
+            <a th:href="'/q-edit/delete/' + ${question.id}">Delete</a>
+        </td>
 
 
     </tr>

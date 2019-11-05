@@ -1,5 +1,7 @@
 package quentin.testcreator.models;
 
+import org.springframework.beans.factory.annotation.Required;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
@@ -13,6 +15,7 @@ public abstract class Question {
     @NotNull
     private String questionText;
 
+    //@NotNull
     @ManyToOne
     private Test test;
 
@@ -39,5 +42,13 @@ public abstract class Question {
 
     public void setQuestionText(String text) {
         this.questionText = text;
+    }
+
+    public Test getTest() {
+        return test;
+    }
+
+    public void setTest(Test test) {
+        this.test = test;
     }
 }
