@@ -13,6 +13,9 @@ public abstract class Question {
     @NotNull
     private String questionText;
 
+    @ManyToOne
+    private Test test;
+
     Question(){
 
         questionText = "";

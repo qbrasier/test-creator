@@ -1,8 +1,6 @@
 package quentin.testcreator.models;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 import javax.validation.constraints.Size;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,6 +13,9 @@ public class Test {
     @Size(min=1, max=50)
     private String name;
 
+
+    @OneToMany
+    @JoinColumn(name = "test_id")
     private List<Question> questions = new ArrayList<Question>();
 
 
@@ -33,6 +34,7 @@ public class Test {
     public void setName(String name) {
         this.name = name;
     }
+
 
     public List<Question> getQuestions() {
         return questions;
