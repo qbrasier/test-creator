@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org/">
+<head th:replace="fragments :: head">
+
+</head>
+<body class="container">
+<h1 th:text="${title}">Default Title</h1>
+
+<nav th:replace="fragments :: navigation"></nav>
+
+<table id="testsDisplay" style="width:100%;" >
+    <tr>
+        <th style="text-align: left;">Id</th>
+        <th style="text-align: left;">Name</th>
+        <th style="text-align: left;">Questions</th>
+        <th style="text-align: left;"></th>
+        <th style="text-align: left;"></th>
+    </tr>
+
+    <tr th:each="test : ${tests}">
+        <td th:text="${test.id}"></td>
+        <td th:text="${test.name}"></td>
+        <td th:text="${#lists.size(test.questions)}"></td>
+
+        <td>
+            <a th:href="'/t-edit/edit/' + ${test.id}">Edit</a>
+        </td>
+        <td>
+            <a th:href="'/t-edit/delete/' + ${test.id}">Delete</a>
+        </td>
+
+
+    </tr>
+
+</table>
+
+<a href="/t-edit/addTest">Create New Test</a>
+
+</body>
+</html>
