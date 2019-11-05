@@ -7,6 +7,7 @@ import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 import quentin.testcreator.models.*;
 import quentin.testcreator.models.data.QuestionDao;
+import quentin.testcreator.models.data.TestDao;
 
 import javax.validation.Valid;
 import java.util.Optional;
@@ -17,6 +18,9 @@ public class QuestionController {
 
     @Autowired
     private QuestionDao questionDao;
+    
+    @Autowired
+    private TestDao testDao;
 
     @RequestMapping(value = "")
     public String index(Model model){
@@ -30,73 +34,70 @@ public class QuestionController {
     public String addTF(Model model){
         model.addAttribute("question", new TrueFalseQuestion());
         model.addAttribute("title", "Create New Question");
+        model.addAttribute("tests", testDao.findAll());
         return "question/addTrueFalse";
     }
 
     @RequestMapping(value = "addTF", method = RequestMethod.POST)
-    public String addTF(Model model, @ModelAttribute @Valid TrueFalseQuestion question, Errors errors){
-        if(errors.hasErrors()){
-            model.addAttribute("question", question);
-            model.addAttribute("title", "Create New Question");
-            return "question/addTrueFalse";
-        }
-        questionDao.save(question);
-        return "redirect:";
+    public String addTF(Model model, @ModelAttribute @Valid TrueFalseQuestion question, Errors errors, @RequestParam int testId){
+        return addQuestionPost(model, question, errors, testId);
     }
     @RequestMapping(value = "addMulti", method = RequestMethod.GET)
     public String addMulti(Model model){
         model.addAttribute("question", new MultipleChoiceQuestion());
         model.addAttribute("title", "Create New Question");
+        model.addAttribute("tests", testDao.findAll());
         return "question/addMultipleChoice";
     }
 
     @RequestMapping(value = "addMulti", method = RequestMethod.POST)
-    public String addMulti(Model model, @ModelAttribute @Valid MultipleChoiceQuestion question, Errors errors){
-        if(errors.hasErrors()){
-            model.addAttribute("question", question);
-            model.addAttribute("title", "Create New Question");
-            model.addAttribute("error", errors);
-            return "question/addMultipleChoice";
-        }
-        questionDao.save(question);
-        return "redirect:";
+    public String addMulti(Model model, @ModelAttribute @Valid MultipleChoiceQuestion question, Errors errors, @RequestParam int testId){
+        return addQuestionPost(model, question, errors, testId);
     }
     @RequestMapping(value = "addFITB", method = RequestMethod.GET)
     public String addFITB(Model model){
         model.addAttribute("question", new FillInTheBlankQuestion());
         model.addAttribute("title", "Create New Question");
+        model.addAttribute("tests", testDao.findAll());
         return "question/addFillInTheBlank";
     }
 
     @RequestMapping(value = "addFITB", method = RequestMethod.POST)
-    public String addFITB(Model model, @ModelAttribute @Valid FillInTheBlankQuestion question, Errors errors){
-        if(errors.hasErrors()){
-            model.addAttribute("question", question);
-            model.addAttribute("title", "Create New Question");
-            model.addAttribute("error", errors);
-            return "question/addFillInTheBlank";
-        }
-        questionDao.save(question);
-        return "redirect:";
+    public String addFITB(Model model, @ModelAttribute @Valid FillInTheBlankQuestion question, Errors errors, @RequestParam int testId){
+        return addQuestionPost(model, question, errors, testId);
     }
     @RequestMapping(value = "addEssay", method = RequestMethod.GET)
     public String addEssay(Model model){
         model.addAttribute("question", new EssayQuestion());
         model.addAttribute("title", "Create New Question");
+        model.addAttribute("tests", testDao.findAll());
         return "question/addEssay";
     }
 
     @RequestMapping(value = "addEssay", method = RequestMethod.POST)
-    public String addEssay(Model model, @ModelAttribute @Valid EssayQuestion question, Errors errors){
-        if(errors.hasErrors()){
+    public String addEssay(Model model, @ModelAttribute @Valid EssayQuestion question, Errors errors, @RequestParam int testId){
+        return addQuestionPost(model, question, errors, testId);
+    }
+
+
+    public String addQuestionPost(Model model, Question question, Errors errors, int testId){
+
+        Optional<Test> optionalTest = testDao.findById(testId);
+        if(!optionalTest.isPresent() || errors.hasErrors()){
+            String template = question.getClass().getSimpleName().replace("Question", "");
             model.addAttribute("question", question);
             model.addAttribute("title", "Create New Question");
-            model.addAttribute("error", errors);
-            return "question/addEssay";
+            model.addAttribute("tests", testDao.findAll());
+            return "question/add" + template;
         }
+        Test test = optionalTest.get();
+        question.setTest(test);
         questionDao.save(question);
         return "redirect:";
     }
+
+
+
 
     /*
     @RequestMapping(value = "remove", method = RequestMethod.GET)
@@ -128,6 +129,7 @@ public class QuestionController {
         Question question = optionalQuestion.get();
         model.addAttribute("question", question);
         model.addAttribute("title", "Edit Question");
+        model.addAttribute("tests", testDao.findAll());
         String template = question.getClass().getSimpleName();
         template = template.replace("Question", "");
         return "question/add" + template;
@@ -143,6 +145,7 @@ public class QuestionController {
             System.out.println("error in TrueFalse");
             model.addAttribute("question", question);
             model.addAttribute("title", "Edit Question");
+            model.addAttribute("tests", testDao.findAll());
             model.addAttribute("error", errors);
             return "question/addTrueFalse";
         }
@@ -154,6 +157,7 @@ public class QuestionController {
             System.out.println("error in multipleChoice");
             model.addAttribute("question", question);
             model.addAttribute("title", "Edit Question");
+            model.addAttribute("tests", testDao.findAll());
             model.addAttribute("error", errors);
             return "question/addMultipleChoice";
         }
@@ -165,6 +169,7 @@ public class QuestionController {
             System.out.println("error in Essay");
             model.addAttribute("question", question);
             model.addAttribute("title", "Edit Question");
+            model.addAttribute("tests", testDao.findAll());
             model.addAttribute("error", errors);
             return "question/addEssay";
         }
@@ -176,6 +181,7 @@ public class QuestionController {
             System.out.println("error in FillInTheBlank");
             model.addAttribute("question", question);
             model.addAttribute("title", "Edit Question");
+            model.addAttribute("tests", testDao.findAll());
             model.addAttribute("error", errors);
             return "question/addFillInTheBlank";
         }

@@ -27,6 +27,13 @@
     <input type="text" th:field="*{choices[3]}"/><br>
     <span th:errors="*{choices[3]}"></span>
 
+    Select a test to add this question to:
+    <select name="testId">
+        <option th:each="test : ${tests}"
+                th:text="${test.name}"
+                th:value="${test.id}"></option>
+    </select><br>
+
     <input type="submit" value="Submit"/>
 </form>
 

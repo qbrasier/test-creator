@@ -11,6 +11,7 @@
 <table id="questionsDisplay" style="width:100%;" >
     <tr>
         <th style="text-align: left;">Id</th>
+        <th style="text-align: left;">Test</th>
         <th style="text-align: left;">Type</th>
         <th style="text-align: left;">Question</th>
         <th style="text-align: left;">Answers</th>
@@ -22,7 +23,8 @@
 
     <tr th:each="question : ${questions}">
         <td th:text="${question.id}"></td>
-        <td th:text="${question.class.name}"></td>
+        <td th:text="${question.test.name}"></td>
+        <td th:text="${question.class.simpleName}"></td>
         <td th:text="${question.questionText}"></td>
 
 

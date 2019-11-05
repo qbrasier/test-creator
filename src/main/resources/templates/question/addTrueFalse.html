@@ -7,13 +7,20 @@
 <nav th:replace="fragments :: navigation"></nav>
 
 <form method="post" th:object="${question}">
+
     Question<br>
     <input type="text"  th:field="*{questionText}"/><br>
     <span th:errors="*{questionText}"></span>
     Correct Answer:<br>
     <input type="radio" th:field="*{correctAnswer}" th:value="${true}" />
     <input type="radio" th:field="*{correctAnswer}" th:value="${false}" />
-    <span th:errors="*{correctAnswer}"></span>
+    <span th:errors="*{correctAnswer}"></span><br>
+    Select a test to add this question to:
+    <select name="testId">
+        <option th:each="test : ${tests}"
+                th:text="${test.name}"
+                th:value="${test.id}"></option>
+    </select><br>
     <input type="submit" value="Submit"/>
 </form>
 
