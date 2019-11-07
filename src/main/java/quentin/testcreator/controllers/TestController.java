@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import quentin.testcreator.models.Test;
+import quentin.testcreator.models.data.QuestionDao;
 import quentin.testcreator.models.data.TestDao;
 
 import javax.validation.Valid;
@@ -20,6 +21,9 @@ public class TestController {
 
     @Autowired
     TestDao testDao;
+
+    @Autowired
+    QuestionDao questionDao;
 
     @RequestMapping("")
     public String index(Model model){
@@ -44,6 +48,21 @@ public class TestController {
         }
         testDao.save(test);
         return "redirect:";
+    }
+
+    @RequestMapping(value = "view/{Id}", method = RequestMethod.GET)
+    public String viewTest(Model model, @PathVariable int Id) {
+
+        System.out.println("trying to view " + Id );
+        Optional<Test> optionalTest = testDao.findById(Id);
+        if(!optionalTest.isPresent()){
+            return "redirect:/t-edit/";
+        }
+        Test test = optionalTest.get();
+        model.addAttribute("test", test);
+        model.addAttribute("title", test.getName());
+        model.addAttribute("questions", test.getQuestions());
+        return "test/viewTest";
     }
 
     @RequestMapping(value = "delete/{Id}", method = RequestMethod.GET)

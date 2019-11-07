@@ -19,11 +19,14 @@
 
     <tr th:each="test : ${tests}">
         <td th:text="${test.id}"></td>
-        <td th:text="${test.name}"></td>
+        <td>
+            <a th:href="'/t-edit/view/' + ${test.id}" th:text="${test.name}"></a>
+        </td>
+
         <td th:text="${#lists.size(test.questions)}"></td>
 
         <td>
-            <a th:href="'/t-edit/edit/' + ${test.id}">Edit</a>
+            <a th:href="'/t-edit/edit/' + ${test.id}">Change Test Name</a>
         </td>
         <td>
             <a th:href="'/t-edit/delete/' + ${test.id}">Delete</a>

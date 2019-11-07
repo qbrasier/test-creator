@@ -1,8 +1,8 @@
-select box for what test
-get database relationships working through UI
-finish CRUD				done for Question
+select box for what test			done
+get database relationships working through UI	done
+finish CRUD				done for Question & test
 ------------ 3 features done
 user login					maybe 2 days
 better question editor (react?)		maybe 2 weeks
 printing(not necessary - file->print)		maybe 2 weeks
-deploy to maxthedog.website			maybe 5 hours
+deploy to maxthedog.website			maybe 5 hours of waiting for java to install
