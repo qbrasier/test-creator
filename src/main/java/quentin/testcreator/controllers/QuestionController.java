@@ -12,6 +12,7 @@ import quentin.testcreator.models.data.QuestionDao;
 import quentin.testcreator.models.data.TestDao;
 
 import javax.persistence.Inheritance;
+import javax.transaction.Transactional;
 import javax.validation.Valid;
 import java.lang.annotation.Inherited;
 import java.util.Optional;
@@ -181,35 +182,57 @@ public class QuestionController {
     }
 
     @RequestMapping(value = "edit/TrueFalse", method = RequestMethod.POST)
-    public String editTFQuestion(Model model, @ModelAttribute @Valid TrueFalseQuestion question, Errors errors) {
-        return editQuestionPost(model, question, errors);
+    public String editTFQuestion(Model model, @ModelAttribute @Valid TrueFalseQuestion question, Errors errors, @RequestParam int testId) {
+        return editQuestionPost(model, question, errors, testId);
     }
     @RequestMapping(value = "edit/MultipleChoice", method = RequestMethod.POST)
-    public String editMCQuestion(Model model, @ModelAttribute @Valid MultipleChoiceQuestion question, Errors errors) {
-        return editQuestionPost(model, question, errors);
+    public String editMCQuestion(Model model, @ModelAttribute @Valid MultipleChoiceQuestion question, Errors errors, @RequestParam int testId) {
+        return editQuestionPost(model, question, errors, testId);
     }
     @RequestMapping(value = "edit/Essay", method = RequestMethod.POST)
-    public String editEQuestion(Model model, @ModelAttribute @Valid EssayQuestion question, Errors errors) {
-        return editQuestionPost(model, question, errors);
+    public String editEQuestion(Model model, @ModelAttribute @Valid EssayQuestion question, Errors errors, @RequestParam int testId) {
+        return editQuestionPost(model, question, errors, testId);
     }
     @RequestMapping(value = "edit/FillInTheBlank", method = RequestMethod.POST)
-    public String editFITBQuestion(Model model, @ModelAttribute @Valid FillInTheBlankQuestion question, Errors errors) {
-        return editQuestionPost(model, question, errors);
+    public String editFITBQuestion(Model model, @ModelAttribute @Valid FillInTheBlankQuestion question, Errors errors, @RequestParam int testId) {
+        return editQuestionPost(model, question, errors, testId);
     }
-    public String editQuestionPost(Model model, @ModelAttribute @Valid Question question, Errors errors) {
+
+    //combine the add and edit methods into one
+    public String editQuestionPost(Model model, @ModelAttribute @Valid Question question, Errors errors, int testId) {
         System.out.println("editing " + question.getClass().getSimpleName());
-        if(errors.hasErrors()){
-            System.out.println("error in Question");
-            String template = question.getClass().getSimpleName().replace("Question", "");
+
+        Optional<Test> optionalTest = testDao.findById(testId);
+        if(!optionalTest.isPresent() || errors.hasErrors()){
+            String template = question.getClass().getSimpleName();
+            template = template.replace("Question", "");
+
+            System.out.println("trying to edit a " + template + " question that has errors");
+            for (ObjectError error: errors.getAllErrors()) {
+                System.out.println(error.toString());
+            }
             model.addAttribute("question", question);
-            model.addAttribute("title", "Edit Question");
+            model.addAttribute("title", "Create New Question");
             model.addAttribute("tests", testDao.findAll());
-            model.addAttribute("error", errors);
+            model.addAttribute("URL", "" + template);
             return "question/add" + template;
         }
 
-        //questionDao.save(question);     instead of saving question, change the values on the questions so no duplicate
+        //questionDao.save(question);//     instead of saving question, change the values on the questions so no duplicate
+        int id = question.getId();
+        Optional<Question> optionalQuestion = questionDao.findById(id);
+        if(optionalQuestion.isPresent()) {
+            Question storedQuestion = optionalQuestion.get();
 
+            System.out.println(storedQuestion.getClass());
+            storedQuestion = question;
+            storedQuestion.setTest(optionalTest.get());
+            questionDao.save(storedQuestion);
+        }else{
+            question.setTest(optionalTest.get());
+            System.out.println("saving new question to database, may be a duplicate based on why we're doing sucha thing");
+            questionDao.save(question);
+        }
 
 
         return "redirect:/q-edit/";
