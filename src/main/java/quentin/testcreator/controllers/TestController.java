@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import quentin.testcreator.models.Question;
 import quentin.testcreator.models.Test;
 import quentin.testcreator.models.data.QuestionDao;
 import quentin.testcreator.models.data.TestDao;
@@ -70,8 +71,15 @@ public class TestController {
     public String removeTest(Model model, @PathVariable int Id) {
 
         System.out.println("trying to delete " + Id );
-        testDao.deleteById(Id);
 
+        Optional<Test> testOptional = testDao.findById(Id);
+        if(testOptional.isPresent()) {
+            Test test = testOptional.get();
+            for (Question question : test.getQuestions() ) {
+                questionDao.delete(question);
+            }
+            testDao.deleteById(Id);
+        }
         return "redirect:/t-edit/";
     }
 

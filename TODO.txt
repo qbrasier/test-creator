@@ -1,6 +1,7 @@
 select box for what test			done
 get database relationships working through UI	done
 finish CRUD				done for Question & test
+fix display to not error when test=null
 ------------ 3 features done
 user login					maybe 2 days
 better question editor (react?)		maybe 2 weeks
