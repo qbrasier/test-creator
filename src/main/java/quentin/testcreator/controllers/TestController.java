@@ -14,6 +14,7 @@ import quentin.testcreator.models.data.QuestionDao;
 import quentin.testcreator.models.data.TestDao;
 
 import javax.validation.Valid;
+import java.util.List;
 import java.util.Optional;
 
 @Controller
@@ -92,13 +93,20 @@ public class TestController {
             return "redirect:/t-edit/";
         }
         Test test = optionalTest.get();
+
+        System.out.println("we will now print a list of the questions associated with this test.");
+        for(Question question: test.getQuestions()){
+            System.out.println(question.getId());
+        }
+
         model.addAttribute("test", test);
         model.addAttribute("title", "Edit Test Name");
+        //model.addAttribute("questions", test.getQuestions());
         return "test/addTest";
     }
 
     @RequestMapping(value = "edit/{Id}", method = RequestMethod.POST)
-    public String editQuestion(Model model, @ModelAttribute @Valid Test test, Errors errors) {
+    public String editTestName(Model model, @ModelAttribute @Valid Test test, Errors errors) {
         System.out.println("editing test");
         if(errors.hasErrors()){
             System.out.println("error in test");
@@ -107,7 +115,19 @@ public class TestController {
             model.addAttribute("error", errors);
             return "test/addTest";
         }
+        System.out.println("we will now print a list of the questions associated with this test. POST");
+
+        //test.setQuestions(questions);
+        for(Question question: questionDao.findAll()){
+            if(question.getTest().getId() == test.getId() ) {
+                System.out.println(question.getId());
+                test.addQuestion(question);
+            }
+            //question.setTest(test);
+            //questionDao.save(question);
+        }
         testDao.save(test);
+
         return "redirect:/t-edit/";
     }
 
