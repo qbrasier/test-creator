@@ -3,6 +3,7 @@ package quentin.testcreator.controllers;
 import com.itextpdf.kernel.pdf.PdfDocument;
 import com.itextpdf.kernel.pdf.PdfWriter;
 import com.itextpdf.layout.element.Paragraph;
+import com.itextpdf.layout.property.TextAlignment;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.stereotype.Controller;
@@ -161,12 +162,17 @@ public class TestController {
         PdfDocument pdf = new PdfDocument(writer);
         Document doc = new Document(pdf);
 
-        doc.add(new Paragraph(test.getName()));
+        Paragraph title = new Paragraph(test.getName());
+        title.setBold();
+        title.setFontSize(20);
+        title.setTextAlignment(TextAlignment.CENTER);
+        doc.add(title);
 
 
         System.out.println("we will now populate the pdf document with the test questions.");
-        for(Question question: test.getQuestions()){
-            doc = question.addToPDF(doc);
+        for(int i = 0; i < test.getQuestions().size(); i++){
+
+            doc = test.getQuestions().get(i).addToPDF(doc, i+1);
         }
         doc.close();
         //return "redirect:/t-edit/";

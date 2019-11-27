@@ -55,7 +55,7 @@ public abstract class Question {
         this.test = test;
     }
 
-    public Document addToPDF(Document doc) throws IOException {
+    public Document addToPDF(Document doc, int number) throws IOException {
         doc.add( new Paragraph(this.getQuestionText()));
         return doc;
     }

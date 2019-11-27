@@ -1,7 +1,11 @@
 package quentin.testcreator.models;
 
 import com.itextpdf.layout.Document;
+import com.itextpdf.layout.borders.Border;
+import com.itextpdf.layout.element.Cell;
 import com.itextpdf.layout.element.Paragraph;
+import com.itextpdf.layout.element.Table;
+import com.itextpdf.layout.property.TextAlignment;
 
 import javax.persistence.Entity;
 import javax.validation.constraints.NotNull;
@@ -34,13 +38,21 @@ public class FillInTheBlankQuestion extends Question {
     }
 
     @Override
-    public Document addToPDF(Document doc)  throws IOException {
-        String print = this.getQuestionText();
+    public Document addToPDF(Document doc, int number)  throws IOException {
+        String print = number + ". " + this.getQuestionText();
         String blank = "";
         for(int i = 0; i < this.getCorrectAnswer().length(); i++)
             blank += "__";
         print = print.replace(this.getCorrectAnswer(), blank);
-        doc.add( new Paragraph(print));
+
+        Cell cell = new Cell().add(new Paragraph(print));
+        cell.setTextAlignment(TextAlignment.LEFT);
+        cell.setPaddingLeft(0);
+        cell.setBorder(Border.NO_BORDER);
+        Table table = new Table(1);
+
+        table.addCell(cell);
+        doc.add( table);
         return doc;
     }
 }
