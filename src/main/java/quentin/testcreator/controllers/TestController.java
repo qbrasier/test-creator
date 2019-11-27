@@ -17,6 +17,8 @@ import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 
+import com.itextpdf.*;
+
 @Controller
 @RequestMapping("t-edit")
 public class TestController {
@@ -129,6 +131,14 @@ public class TestController {
         testDao.save(test);
 
         return "redirect:/t-edit/";
+    }
+
+    @RequestMapping(value = "print/{Id}", method = RequestMethod.GET)
+    public String Print(Model model, @PathVariable int Id) {
+
+        
+
+        return "test/addTest";
     }
 
 }
