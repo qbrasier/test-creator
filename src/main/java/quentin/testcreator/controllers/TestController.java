@@ -1,21 +1,30 @@
 package quentin.testcreator.controllers;
 
+import com.itextpdf.kernel.pdf.PdfDocument;
+import com.itextpdf.kernel.pdf.PdfWriter;
+import com.itextpdf.layout.element.Paragraph;
+import com.itextpdf.layout.property.TextAlignment;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 import quentin.testcreator.models.Question;
 import quentin.testcreator.models.Test;
 import quentin.testcreator.models.data.QuestionDao;
 import quentin.testcreator.models.data.TestDao;
 
+
 import javax.validation.Valid;
+import java.awt.*;
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
+
+import com.itextpdf.layout.Document;
+import com.itextpdf.*;
 
 @Controller
 @RequestMapping("t-edit")
@@ -129,6 +138,45 @@ public class TestController {
         testDao.save(test);
 
         return "redirect:/t-edit/";
+    }
+
+    @RequestMapping(value = "print/{Id}", method = RequestMethod.GET)
+    @ResponseBody
+    public FileSystemResource Print(Model model, @PathVariable int Id) throws IOException {
+
+        System.out.println("trying to print " + Id );
+        Optional<Test> optionalTest = testDao.findById(Id);
+        if(!optionalTest.isPresent()){
+            return null;
+            //return "redirect:/t-edit/";
+        }
+        Test test = optionalTest.get();
+
+        System.out.println("entering the print function: GET");
+        String FileName = "c:/temp/" + test.getName() + ".pdf";
+        File output = new File(FileName);
+        output.getParentFile().mkdirs();
+        Font mainFont = new Font( "hi", 18, Font.BOLD);
+
+        PdfWriter writer = new PdfWriter(FileName);
+        PdfDocument pdf = new PdfDocument(writer);
+        Document doc = new Document(pdf);
+
+        Paragraph title = new Paragraph(test.getName());
+        title.setBold();
+        title.setFontSize(20);
+        title.setTextAlignment(TextAlignment.CENTER);
+        doc.add(title);
+
+
+        System.out.println("we will now populate the pdf document with the test questions.");
+        for(int i = 0; i < test.getQuestions().size(); i++){
+
+            doc = test.getQuestions().get(i).addToPDF(doc, i+1);
+        }
+        doc.close();
+        //return "redirect:/t-edit/";
+        return new FileSystemResource(output);
     }
 
 }

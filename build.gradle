@@ -17,6 +17,7 @@ configurations {
 
 repositories {
 	mavenCentral()
+    maven { url 'https://jitpack.io' }
 }
 
 dependencies {
@@ -28,6 +29,9 @@ dependencies {
 	testImplementation('org.springframework.boot:spring-boot-starter-test') {
 		exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
 	}
+    implementation 'com.github.itext.itext7:barcodes:7.1.9'
+	implementation 'com.github.itext.itext7:layout:7.1.9'
+
 }
 
 test {

@@ -26,6 +26,9 @@
         <td th:text="${#lists.size(test.questions)}"></td>
 
         <td>
+            <a th:download="${test.name} + '.pdf'" th:href="'/t-edit/print/' + ${test.id}">Download PDF</a>
+        </td>
+        <td>
             <a th:href="'/t-edit/edit/' + ${test.id}">Change Test Name</a>
         </td>
         <td>
