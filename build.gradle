@@ -30,6 +30,7 @@ dependencies {
 		exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
 	}
     implementation 'com.github.itext.itext7:barcodes:7.1.9'
+	implementation 'com.github.itext.itext7:layout:7.1.9'
 
 }
 

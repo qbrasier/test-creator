@@ -1,5 +1,8 @@
 package quentin.testcreator.controllers;
 
+import com.itextpdf.kernel.pdf.PdfDocument;
+import com.itextpdf.kernel.pdf.PdfWriter;
+import com.itextpdf.layout.element.Paragraph;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -13,10 +16,15 @@ import quentin.testcreator.models.Test;
 import quentin.testcreator.models.data.QuestionDao;
 import quentin.testcreator.models.data.TestDao;
 
+
 import javax.validation.Valid;
+import java.awt.*;
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
+import com.itextpdf.layout.Document;
 import com.itextpdf.*;
 
 @Controller
@@ -134,11 +142,22 @@ public class TestController {
     }
 
     @RequestMapping(value = "print/{Id}", method = RequestMethod.GET)
-    public String Print(Model model, @PathVariable int Id) {
+    public String Print(Model model, @PathVariable int Id) throws IOException {
 
-        
+        System.out.println("entering the print function: GET");
+        String FileName = "c:/temp/FirstPdf.pdf";
+        File output = new File(FileName);
+        output.getParentFile().mkdirs();
+        Font mainFont = new Font( "hi", 18, Font.BOLD);
 
-        return "test/addTest";
+        PdfWriter writer = new PdfWriter(FileName);
+        PdfDocument pdf = new PdfDocument(writer);
+        Document doc = new Document(pdf);
+
+        doc.add(new Paragraph("hello world"));
+        doc.close();
+
+        return "redirect:/t-edit/";
     }
 
 }
