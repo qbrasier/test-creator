@@ -1,7 +1,11 @@
 package quentin.testcreator.models;
 
+import com.itextpdf.layout.Document;
+import com.itextpdf.layout.element.Paragraph;
+
 import javax.persistence.Entity;
 import javax.validation.constraints.NotNull;
+import java.io.IOException;
 
 @Entity
 public class FillInTheBlankQuestion extends Question {
@@ -27,5 +31,16 @@ public class FillInTheBlankQuestion extends Question {
 
     public void setCorrectAnswer(String correctAnswer) {
         this.correctAnswer = correctAnswer;
+    }
+
+    @Override
+    public Document addToPDF(Document doc)  throws IOException {
+        String print = this.getQuestionText();
+        String blank = "";
+        for(int i = 0; i < this.getCorrectAnswer().length(); i++)
+            blank += "__";
+        print = print.replace(this.getCorrectAnswer(), blank);
+        doc.add( new Paragraph(print));
+        return doc;
     }
 }

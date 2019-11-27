@@ -1,9 +1,12 @@
 package quentin.testcreator.models;
 
+import com.itextpdf.layout.Document;
+import com.itextpdf.layout.element.Paragraph;
 import org.springframework.beans.factory.annotation.Required;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.io.IOException;
 
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
@@ -50,5 +53,10 @@ public abstract class Question {
 
     public void setTest(Test test) {
         this.test = test;
+    }
+
+    public Document addToPDF(Document doc) throws IOException {
+        doc.add( new Paragraph(this.getQuestionText()));
+        return doc;
     }
 }

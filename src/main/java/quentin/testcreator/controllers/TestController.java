@@ -166,7 +166,7 @@ public class TestController {
 
         System.out.println("we will now populate the pdf document with the test questions.");
         for(Question question: test.getQuestions()){
-            doc.add(new Paragraph(question.getQuestionText()));
+            doc = question.addToPDF(doc);
         }
         doc.close();
         //return "redirect:/t-edit/";
