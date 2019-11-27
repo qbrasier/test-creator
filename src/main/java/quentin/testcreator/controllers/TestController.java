@@ -4,13 +4,11 @@ import com.itextpdf.kernel.pdf.PdfDocument;
 import com.itextpdf.kernel.pdf.PdfWriter;
 import com.itextpdf.layout.element.Paragraph;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 import quentin.testcreator.models.Question;
 import quentin.testcreator.models.Test;
 import quentin.testcreator.models.data.QuestionDao;
@@ -142,10 +140,19 @@ public class TestController {
     }
 
     @RequestMapping(value = "print/{Id}", method = RequestMethod.GET)
-    public String Print(Model model, @PathVariable int Id) throws IOException {
+    @ResponseBody
+    public FileSystemResource Print(Model model, @PathVariable int Id) throws IOException {
+
+        System.out.println("trying to print " + Id );
+        Optional<Test> optionalTest = testDao.findById(Id);
+        if(!optionalTest.isPresent()){
+            return null;
+            //return "redirect:/t-edit/";
+        }
+        Test test = optionalTest.get();
 
         System.out.println("entering the print function: GET");
-        String FileName = "c:/temp/FirstPdf.pdf";
+        String FileName = "c:/temp/" + test.getName() + ".pdf";
         File output = new File(FileName);
         output.getParentFile().mkdirs();
         Font mainFont = new Font( "hi", 18, Font.BOLD);
@@ -154,10 +161,16 @@ public class TestController {
         PdfDocument pdf = new PdfDocument(writer);
         Document doc = new Document(pdf);
 
-        doc.add(new Paragraph("hello world"));
-        doc.close();
+        doc.add(new Paragraph(test.getName()));
 
-        return "redirect:/t-edit/";
+
+        System.out.println("we will now populate the pdf document with the test questions.");
+        for(Question question: test.getQuestions()){
+            doc.add(new Paragraph(question.getQuestionText()));
+        }
+        doc.close();
+        //return "redirect:/t-edit/";
+        return new FileSystemResource(output);
     }
 
 }
